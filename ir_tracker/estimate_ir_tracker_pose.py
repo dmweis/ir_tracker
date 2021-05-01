@@ -17,18 +17,21 @@ calibartion_read = calibration_manager.ImageCalibration.load_yaml(
 mtx = calibartion_read.mtx
 dist = calibartion_read.dist
 
-object_points = np.float32([[0, 0, 0], [0.12, 0, 0], [0.06, 0.12, 0],
-                            [0.06 + 0.056, 0.12 + 0.056, 0]])
+object_points = np.float32([[0, 0, 0], [0.12, 0, 0], [0.06, -0.12, 0],
+                            [0.06 + 0.056, -0.12 - 0.056, 0]])
 axis = np.float32([[0.03, 0, 0], [0, 0.03, 0], [0, 0, -0.03]])
 use_ransac = True
 
 
 def draw_pose(img, corners, imgpts):
-    corner = tuple(corners[0].ravel())
-    img = cv2.line(img, corner, tuple(imgpts[0].ravel()), (255, 0, 0), 5)
-    img = cv2.line(img, corner, tuple(imgpts[1].ravel()), (0, 255, 0), 5)
-    img = cv2.line(img, corner, tuple(imgpts[2].ravel()), (0, 0, 255), 5)
-    return img
+    try:
+        corner = tuple(corners[0].ravel())
+        img = cv2.line(img, corner, tuple(imgpts[0].ravel()), (255, 0, 0), 5)
+        img = cv2.line(img, corner, tuple(imgpts[1].ravel()), (0, 255, 0), 5)
+        img = cv2.line(img, corner, tuple(imgpts[2].ravel()), (0, 0, 255), 5)
+        return img
+    except:
+        pass
 
 
 if __name__ == "__main__":
@@ -74,7 +77,7 @@ if __name__ == "__main__":
             except ZeroDivisionError:
                 pass
         image_points = np.float32(image_points)
-        if len(image_points) >= 4:
+        if len(image_points) == 4:
             if use_ransac:
                 ret, rvecs, tvecs, _ = cv2.solvePnPRansac(
                     object_points, image_points, mtx, dist)
