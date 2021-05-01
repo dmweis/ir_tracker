@@ -95,3 +95,39 @@ def calibarate_from_images(images,
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1,
                                                       (w, h))
     return ImageCalibration(mtx, newcameramtx, dist, rvecs, tvecs, roi)
+
+
+def draw_pose(img, corners, imgpts):
+    corner = tuple(corners[0].ravel())
+    img = cv2.line(img, corner, tuple(imgpts[0].ravel()), (255, 0, 0), 5)
+    img = cv2.line(img, corner, tuple(imgpts[1].ravel()), (0, 255, 0), 5)
+    img = cv2.line(img, corner, tuple(imgpts[2].ravel()), (0, 0, 255), 5)
+    return img
+
+
+def display_chessboard_pose(image,
+                            calibration,
+                            chessboard_height=7,
+                            chessboard_width=6,
+                            display_time=-1):
+    mtx = calibration.mtx
+    dist = calibration.dist
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+
+    objp = np.zeros((chessboard_width * chessboard_height, 3), np.float32)
+    objp[:, :2] = np.mgrid[0:chessboard_height,
+                           0:chessboard_width].T.reshape(-1, 2)
+    axis = np.float32([[3, 0, 0], [0, 3, 0], [0, 0, -3]])
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret, corners = cv2.findChessboardCorners(
+        gray, (chessboard_height, chessboard_width), None)
+    if ret == True:
+        corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1),
+                                    criteria)
+        ret, rvecs, tvecs = cv2.solvePnP(objp, corners2, mtx, dist)
+        imgpts, jac = cv2.projectPoints(axis, rvecs, tvecs, mtx, dist)
+        image = draw_pose(image, corners2, imgpts)
+    if display_time > 0:
+        cv2.imshow("Image", image)
+        cv2.waitKey(display_time)

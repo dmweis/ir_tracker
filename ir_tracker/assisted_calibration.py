@@ -80,23 +80,26 @@ while len(calibration_images) < 10:
 # image_paths = glob.glob('sample_calibration_images/*.jpg')
 # calibration_images = [cv2.imread(image_path) for image_path in image_paths]
 
-print("Saving images")
+image_directory = "calibration_images"
+print(f"Saving images to {image_directory}")
 for i, image in enumerate(calibration_images):
-    cv2.imwrite(f"calibration_images/image_{i}.png", image)
+    cv2.imwrite(f"{image_directory}/image_{i}.png", image)
 print("images saved")
 
 print("Calibrating")
 calibartion = calibration_manager.calibarate_from_images(
     calibration_images, CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH, 500)
 
-calibartion.save_yaml("calibration/picamera_calibration.yml")
+calibration_path = "calibration/picamera_calibration.yml"
+print(f"Saving calibration to {calibration_path}")
+calibartion.save_yaml(calibration_path)
 calibartion_read = calibration_manager.ImageCalibration.load_yaml(
-    "calibration/picamera_calibration.yml")
+    calibration_path)
 
 for image in calibration_images:
     undisorted = calibartion_read.undistort_image(image, False)
     combined = cv2.vconcat((image, undisorted))
-    cv2.imshow('img', combined)
+    cv2.imshow('Image', combined)
     cv2.waitKey(500)
 
 cv2.destroyAllWindows()
