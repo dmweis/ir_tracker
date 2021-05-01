@@ -59,12 +59,14 @@ class ImageCalibration:
 def calibarate_from_images(images,
                            chessboard_height=7,
                            chessboard_width=6,
+                           square_size=1.0,
                            display_time=-1):
     chessboard_coordinates = np.zeros(
         (chessboard_width * chessboard_height, 3), np.float32)
     chessboard_coordinates[:, :2] = np.mgrid[0:chessboard_height,
                                              0:chessboard_width].T.reshape(
                                                  -1, 2)
+    chessboard_coordinates *= square_size
     objpoints = []  # 3d point in real world space
     imgpoints = []  # 2d points in image plane.
 
@@ -125,6 +127,7 @@ def display_chessboard_pose(image,
     if ret == True:
         corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1),
                                     criteria)
+        # ret, rvecs, tvecs, _ = cv2.solvePnPRansac(objp, corners2, mtx, dist)
         ret, rvecs, tvecs = cv2.solvePnP(objp, corners2, mtx, dist)
         imgpts, jac = cv2.projectPoints(axis, rvecs, tvecs, mtx, dist)
         image = draw_pose(image, corners2, imgpts)
