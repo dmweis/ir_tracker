@@ -81,6 +81,7 @@ while len(calibration_images) < 10:
 # calibration_images = [cv2.imread(image_path) for image_path in image_paths]
 
 image_directory = "calibration_images"
+Path(image_directory).mkdir(parents=True, exist_ok=True)
 print(f"Saving images to {image_directory}")
 for i, image in enumerate(calibration_images):
     cv2.imwrite(f"{image_directory}/image_{i}.png", image)
@@ -90,6 +91,7 @@ print("Calibrating")
 calibartion = calibration_manager.calibarate_from_images(
     calibration_images, CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH, 500)
 
+Path("calibration").mkdir(parents=True, exist_ok=True)
 calibration_path = "calibration/picamera_calibration.yml"
 print(f"Saving calibration to {calibration_path}")
 calibartion.save_yaml(calibration_path)
