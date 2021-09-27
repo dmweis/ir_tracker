@@ -1,14 +1,10 @@
+from urllib.request import urlopen
+
 import cv2
 import numpy as np
-from urllib.request import urlopen
 from matplotlib import pyplot as plt
 
-
-def read_image():
-    resp = urlopen('http://camerapi.local:8080/?action=snapshot')
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    return image
+from ir_tracker import utility
 
 
 def draw_info(image, text):
@@ -17,7 +13,7 @@ def draw_info(image, text):
 
 
 while True:
-    image = read_image()
+    image = utility.request_image()
     orb = cv2.ORB_create()
     key_points, descriptors = orb.detectAndCompute(image, None)
     orb_image = cv2.drawKeypoints(image, key_points, outImage=None, flags=2)

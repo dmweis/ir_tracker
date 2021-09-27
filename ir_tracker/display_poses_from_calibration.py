@@ -1,20 +1,18 @@
-import cv2
-import numpy as np
-from ir_tracker import calibration_manager
 from urllib.request import urlopen
 
+import cv2
+import numpy as np
 
-def read_image():
-    resp = urlopen('http://camerapi.local:8080/?action=snapshot')
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    return image
-
+from ir_tracker import calibration_manager, utility
 
 calibartion_read = calibration_manager.ImageCalibration.load_yaml(
     "calibration/picamera_calibration.yml")
 
+CHESSBOARD_HEIGHT = 10
+CHESSBOARD_WIDTH = 7
+
 while True:
-    image = read_image()
-    calibration_manager.display_chessboard_pose(image, calibartion_read, 9, 6,
-                                                20)
+    image = utility.request_image()
+    calibration_manager.display_chessboard_pose(image, calibartion_read,
+                                                CHESSBOARD_HEIGHT,
+                                                CHESSBOARD_WIDTH, 20)

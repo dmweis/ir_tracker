@@ -1,26 +1,24 @@
+from urllib.request import urlopen
+
 import cv2
 import numpy as np
-from urllib.request import urlopen
-from ir_tracker import calibration_manager
 
-
-def read_image():
-    resp = urlopen('http://camerapi.local:8080/?action=snapshot')
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    width, height = image.shape[:2]
-    return image
-
+from ir_tracker import calibration_manager, utility
 
 calibartion_read = calibration_manager.ImageCalibration.load_yaml(
     "calibration/picamera_calibration.yml")
 mtx = calibartion_read.mtx
 dist = calibartion_read.dist
 
-object_points = np.float32([[0, 0, 0], [0.12, 0, 0], [0.06, -0.12, 0],
-                            [0.06 + 0.056, -0.12 - 0.056, 0]])
-axis = np.float32([[0.03, 0, 0], [0, 0.03, 0], [0, 0, -0.03]])
-use_ransac = True
+# object_points = np.float32([[0, 0, 0], [0.12, 0, 0], [0.06, -0.12, 0],
+#                             [0.06 + 0.056, -0.12 - 0.056, 0]])
+object_points = np.zeros((3 * 4, 3), np.float32)
+object_points[:, :2] = np.mgrid[0:4, 0:3].T.reshape(-1, 2)
+# object_points = np.delete(object_points, 4, 0)
+# print("object points\n", object_points)
+# exit()
+axis = np.float32([[1, 0, 0], [0, 1, 0], [0, 0, -1]])
+use_ransac = False
 
 
 def draw_pose(img, corners, imgpts):
@@ -40,7 +38,7 @@ if __name__ == "__main__":
     binarization_threshold = 180
     while True:
         # image = cv2.imread(f"calibration_images/image000{image_id}.jpg")
-        image = read_image()
+        image = utility.request_image()
         original = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if use_otsu_thresholding:
@@ -77,7 +75,7 @@ if __name__ == "__main__":
             except ZeroDivisionError:
                 pass
         image_points = np.float32(image_points)
-        if len(image_points) == 4:
+        if len(image_points) == 12:
             if use_ransac:
                 ret, rvecs, tvecs, _ = cv2.solvePnPRansac(
                     object_points, image_points, mtx, dist)
@@ -88,8 +86,11 @@ if __name__ == "__main__":
             original = draw_pose(original, image_points, imgpts)
 
         colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
-        combined = cv2.vconcat((original, image))
-        cv2.imshow("thresh", combined)
-        cv2.waitKey(50)
+        try:
+            combined = cv2.vconcat((original, image))
+            cv2.imshow("thresh", combined)
+            cv2.waitKey(50)
+        except:
+            pass
         # while 113 != cv2.waitKey(5):
         #     pass

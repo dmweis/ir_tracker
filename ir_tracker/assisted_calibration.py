@@ -1,30 +1,15 @@
-from os import read
-import time
-import cv2
 import glob
+import time
+from os import read
+from pathlib import Path
+from urllib.request import urlopen
+
+import cv2
 import numpy as np
 import yaml
-from ir_tracker import calibration_manager
-
-import cv2
-import numpy as np
-from urllib.request import urlopen
 from matplotlib import pyplot as plt
 
-
-def read_image():
-    resp = urlopen('http://camerapi.local:8080/?action=snapshot')
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    return image
-
-
-# cap = cv2.VideoCapture(0)
-
-# def read_image():
-#     ret, frame = cap.read()
-#     frame = cv2.resize(frame, (640, 480))
-#     return frame
+from ir_tracker import calibration_manager, utility
 
 
 def draw_info(image, text):
@@ -32,8 +17,8 @@ def draw_info(image, text):
                 (255, 255, 0), 2, cv2.LINE_AA)
 
 
-CHESSBOARD_HEIGHT = 9
-CHESSBOARD_WIDTH = 6
+CHESSBOARD_HEIGHT = 10
+CHESSBOARD_WIDTH = 7
 PICTURE_TIME = 3
 NUMBER_OF_IMAGES = 10
 # record images
@@ -45,7 +30,7 @@ while len(calibration_images) < 10:
         current_time = time.time()
         time_delta = current_time - start_time
         if time_delta > PICTURE_TIME:
-            image = read_image()
+            image = utility.request_image()
             clean_image = image.copy()
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             found_chessboard, corners = cv2.findChessboardCorners(

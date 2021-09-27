@@ -17,8 +17,8 @@ def draw(img, corners, imgpts):
     return img
 
 
-CHESSBOARD_HEIGHT = 9
-CHESSBOARD_WIDTH = 6
+CHESSBOARD_HEIGHT = 10
+CHESSBOARD_WIDTH = 7
 
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 objp = np.zeros((CHESSBOARD_WIDTH * CHESSBOARD_HEIGHT, 3), np.float32)

@@ -1,30 +1,24 @@
-import cv2
-import numpy as np
 from urllib.request import urlopen
 
+import cv2
+import numpy as np
 
-def read_image():
-    resp = urlopen('http://camerapi.local:8080/?action=snapshot')
-    image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    width, height = image.shape[:2]
-    print(f"resolution is width {width} height {height}")
-    return image
-
+from ir_tracker import utility
 
 if __name__ == "__main__":
     # for image_id in range(10):
-    use_otsu_thresholding = False
+    use_otsu_thresholding = True
     binarization_threshold = 210
     while True:
         # image = cv2.imread(f"calibration_images/image000{image_id}.jpg")
-        image = read_image()
+        image = utility.request_image()
         original = image.copy()
         image2 = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         if use_otsu_thresholding:
             threshold_value, thresh = cv2.threshold(
                 gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            print("Thresholding with", threshold_value)
         else:
             threshold_value, thresh = cv2.threshold(gray,
                                                     binarization_threshold,
@@ -78,7 +72,9 @@ if __name__ == "__main__":
                 pass
 
         colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
-        combined = cv2.vconcat((original, image2, image))
+        first_line = cv2.hconcat((original, colored_thresh))
+        second_line = cv2.hconcat((image2, image))
+        combined = cv2.vconcat((first_line, second_line))
         cv2.imshow("thresh", combined)
         cv2.waitKey(50)
         # while 113 != cv2.waitKey(5):
