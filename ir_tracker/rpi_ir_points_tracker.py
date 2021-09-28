@@ -16,10 +16,11 @@ def main():
     capture_timer = utility.FramerateCounter()
     conv_thresh_timer = utility.FramerateCounter()
     contour_timer = utility.FramerateCounter()
-    with picam_wrapper.opencv_picamera() as camera:
-        while True:
+    with picam_wrapper.picamera_opencv_video(resolution=(640, 480),
+                                             framerate=32) as video_stream:
+        for frame in video_stream:
             capture_timer.reset()
-            image = camera.get_frame()
+            image = frame
             print("frame capture took", capture_timer.measure())
 
             conv_thresh_timer.reset()
