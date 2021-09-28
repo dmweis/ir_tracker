@@ -16,7 +16,7 @@ def main():
     capture_timer = utility.FramerateCounter()
     conv_thresh_timer = utility.FramerateCounter()
     contour_timer = utility.FramerateCounter()
-    with picam_wrapper.picamera_opencv_video(resolution=(1280, 720),
+    with picam_wrapper.picamera_opencv_video(resolution=(640, 480),
                                              framerate=30) as video_stream:
         for frame in video_stream:
             capture_timer.reset()
@@ -55,17 +55,9 @@ def main():
                 try:
                     cX = int(M["m10"] / M["m00"])
                     cY = int(M["m01"] / M["m00"])
-
                     point_centers.append((cX, cY))
-
                     if debug:
-                        # Draw the contour and center of the shape on the image
-                        cv2.rectangle(image, (x, y), (x + w, y + h),
-                                      (0, 255, 0), 2)
-                        cv2.circle(image, (cX, cY), 1, (320, 159, 22), 8)
-                        cv2.putText(image, '({}, {})'.format(cX, cY),
-                                    (x, y - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                                    (100, 255, 100), 2)
+                        cv2.circle(image, (cX, cY), 1, (320, 159, 22), 4)
                 except ZeroDivisionError:
                     pass
 
