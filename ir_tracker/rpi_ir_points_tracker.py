@@ -16,10 +16,11 @@ def main():
     capture_timer = utility.FramerateCounter()
     conv_thresh_timer = utility.FramerateCounter()
     contour_timer = utility.FramerateCounter()
-    with picam_wrapper.picamera_opencv_video(resolution=(640, 480),
-                                             framerate=32) as video_stream:
+    with picam_wrapper.picamera_opencv_video(resolution=(1280, 720),
+                                             framerate=30) as video_stream:
         for frame in video_stream:
             capture_timer.reset()
+            debug_image_container["last_image"] = frame.copy()
             image = frame.copy()
             print("frame capture took", capture_timer.measure())
 
@@ -71,15 +72,14 @@ def main():
             if debug:
                 colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
                 combined = utility.concat_images([colored_thresh, image])
-                debug_image_container["last_image"] = frame.copy()
                 debug_image_container["combined"] = combined
 
             data = {
-                "points": point_centers,
                 "frame_time": counter.measure(),
                 "point_count": point_count,
                 "useing_otsu_thresholding": use_otsu_thresholding,
                 "binarization_threshold": binarization_threshold,
+                "points": point_centers,
             }
             broadcaster.send_json(data)
 
