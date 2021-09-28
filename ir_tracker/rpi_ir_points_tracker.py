@@ -73,10 +73,13 @@ def main():
                 colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
                 combined = utility.concat_images([colored_thresh, image])
                 debug_image_container["combined"] = combined
-
+            height, width, channels = image.shape
             data = {
                 "frame_time": counter.measure(),
                 "point_count": point_count,
+                "height": height,
+                "width": width,
+                "channels": channels,
                 "useing_otsu_thresholding": use_otsu_thresholding,
                 "binarization_threshold": binarization_threshold,
                 "points": point_centers,
