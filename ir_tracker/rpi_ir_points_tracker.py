@@ -25,6 +25,8 @@ def main():
 
             conv_thresh_timer.reset()
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            max_val = np.amax(gray)
+            binarization_threshold = max_val - 50
             thresh, threshold_value = utility.threshold_image(
                 gray, binarization_threshold, use_otsu_thresholding)
             print("conversion and thresholding took",
