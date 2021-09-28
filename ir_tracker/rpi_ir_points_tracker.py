@@ -5,7 +5,7 @@ from ir_tracker.utils import debug_server, multicast, picam_wrapper, utility
 
 
 def main():
-    debug = False
+    debug = True
     if debug:
         debug_image_container = debug_server.create_image_server()
     broadcaster = multicast.Broadcaster()
@@ -20,7 +20,7 @@ def main():
                                              framerate=32) as video_stream:
         for frame in video_stream:
             capture_timer.reset()
-            image = frame
+            image = frame.copy()
             print("frame capture took", capture_timer.measure())
 
             conv_thresh_timer.reset()
@@ -69,6 +69,7 @@ def main():
             if debug:
                 colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
                 combined = utility.concat_images([colored_thresh, image])
+                debug_image_container["last_image"] = frame.copy()
                 debug_image_container["combined"] = combined
 
             data = {
