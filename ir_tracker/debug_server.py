@@ -2,7 +2,6 @@ import threading
 
 import cv2
 import numpy as np
-import picamera
 from flask import Flask, Response, render_template_string
 
 app = Flask(__name__)
