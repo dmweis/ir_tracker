@@ -31,7 +31,7 @@ INDEX_TEMPLATE = """
 
 STREAM_PAGE_TEMPLATE = """
 <body>
-    <img src="{{url_for('video_feed', image_name=image_name)}}" width="100%">
+    <img src="{{url_for('video_feed', image_name=image_name)}}" height="100%">
 </body>
 """
 

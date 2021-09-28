@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-from ir_tracker import utility
+from ir_tracker.utils import utility
 
 
 def draw_info(image, text):

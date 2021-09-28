@@ -9,7 +9,7 @@ import numpy as np
 import yaml
 from matplotlib import pyplot as plt
 
-from ir_tracker import calibration_manager, utility
+from ir_tracker.utils import calibration_manager, utility
 
 
 def draw_info(image, text):

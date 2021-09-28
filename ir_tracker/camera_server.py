@@ -1,4 +1,4 @@
-from ir_tracker import debug_server, picam_wrapper
+from ir_tracker.utils import debug_server, picam_wrapper
 
 if __name__ == "__main__":
     debug_image_container = debug_server.create_image_server()

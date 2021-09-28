@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from ir_tracker import debug_server, multicast, picam_wrapper, utility
+from ir_tracker.utils import debug_server, multicast, picam_wrapper, utility
 
 
 def main():
@@ -53,7 +53,7 @@ def main():
 
             data = {
                 "points": point_centers,
-                "frame_time": counter.measure(),
+                "framerate": counter.measure_fps(),
                 "point_count": point_count,
                 "useing_otsu_thresholding": use_otsu_thresholding,
                 "binarization_threshold": binarization_threshold,

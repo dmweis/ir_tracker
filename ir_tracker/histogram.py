@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from urllib.request import urlopen
 from matplotlib import pyplot as plt
-from ir_tracker import utility
+from ir_tracker.utils import utility
 
 plt.ion()
 plt.show()

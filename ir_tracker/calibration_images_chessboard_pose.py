@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from ir_tracker import calibration_manager
+from ir_tracker.utils import calibration_manager
 import glob
 
 calibartion_read = calibration_manager.ImageCalibration.load_yaml(

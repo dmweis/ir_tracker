@@ -1,14 +1,15 @@
 import cv2
 import numpy as np
-from urllib.request import urlopen
-from ir_tracker import utility
+from ir_tracker.utils import utility
 
 if __name__ == "__main__":
-    use_otsu_thresholding = True
+    counter = utility.FramerateCounter()
+    use_otsu_thresholding = False
     binarization_threshold = 180
     while True:
         # image = cv2.imread(f"calibration_images/image000{image_id}.jpg")
-        image = utility.request_image()
+        image = utility.request_image(
+            url="http://camerapi2.local:8000/image_frame/last_image")
 
         original = image.copy()
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -42,6 +43,7 @@ if __name__ == "__main__":
         colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
         # combined = cv2.vconcat((original, image))
         combined = utility.concat_images([original, colored_thresh, image])
+        print("framerate", counter.measure_fps())
         cv2.imshow("thresh", combined)
         cv2.waitKey(50)
         # while 113 != cv2.waitKey(5):

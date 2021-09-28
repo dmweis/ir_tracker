@@ -2,7 +2,7 @@ import cv2
 import glob
 import numpy as np
 import yaml
-from ir_tracker import calibration_manager
+from ir_tracker.utils import calibration_manager
 
 CHESSBOARD_HEIGHT = 10
 CHESSBOARD_WIDTH = 7

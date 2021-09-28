@@ -3,7 +3,7 @@ from urllib.request import urlopen
 import cv2
 import numpy as np
 
-from ir_tracker import utility
+from ir_tracker.utils import utility
 
 if __name__ == "__main__":
     # for image_id in range(10):

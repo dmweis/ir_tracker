@@ -3,7 +3,7 @@ from urllib.request import urlopen
 import cv2
 import numpy as np
 
-from ir_tracker import calibration_manager, utility
+from ir_tracker.utils import calibration_manager, utility
 
 calibartion_read = calibration_manager.ImageCalibration.load_yaml(
     "calibration/picamera_calibration.yml")
