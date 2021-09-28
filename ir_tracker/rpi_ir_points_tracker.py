@@ -8,6 +8,7 @@ def main():
     debug_image_container = debug_server.create_image_server()
     broadcaster = multicast.Broadcaster()
     counter = utility.FramerateCounter()
+    debug = False
     use_otsu_thresholding = False
     binarization_threshold = 180
     with picam_wrapper.opencv_picamera() as camera:
@@ -38,18 +39,21 @@ def main():
 
                     point_centers.append((cX, cY))
 
-                    # Draw the contour and center of the shape on the image
-                    cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0),
-                                  2)
-                    cv2.circle(image, (cX, cY), 1, (320, 159, 22), 8)
-                    cv2.putText(image, '({}, {})'.format(cX, cY), (x, y - 15),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (100, 255, 100),
-                                2)
+                    if debug:
+                        # Draw the contour and center of the shape on the image
+                        cv2.rectangle(image, (x, y), (x + w, y + h),
+                                      (0, 255, 0), 2)
+                        cv2.circle(image, (cX, cY), 1, (320, 159, 22), 8)
+                        cv2.putText(image, '({}, {})'.format(cX, cY),
+                                    (x, y - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
+                                    (100, 255, 100), 2)
                 except ZeroDivisionError:
                     pass
 
-            colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
-            combined = utility.concat_images([colored_thresh, image])
+            if debug:
+                colored_thresh = cv2.cvtColor(thresh, cv2.COLOR_GRAY2BGR)
+                combined = utility.concat_images([colored_thresh, image])
+                debug_image_container["combined"] = combined
 
             data = {
                 "points": point_centers,
@@ -58,10 +62,7 @@ def main():
                 "useing_otsu_thresholding": use_otsu_thresholding,
                 "binarization_threshold": binarization_threshold,
             }
-
             broadcaster.send_json(data)
-
-            debug_image_container["combined"] = combined
 
 
 if __name__ == "__main__":
