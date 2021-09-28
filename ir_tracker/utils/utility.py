@@ -40,7 +40,9 @@ def threshold_image(image, binarization_threshold=180, use_otsu: bool = False):
 
 class FramerateCounter():
     def __init__(self):
+        self.last_tick = cv2.getTickCount()
 
+    def reset(self):
         self.last_tick = cv2.getTickCount()
 
     def measure(self) -> float:

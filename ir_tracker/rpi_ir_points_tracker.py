@@ -12,18 +12,32 @@ def main():
     counter = utility.FramerateCounter()
     use_otsu_thresholding = False
     binarization_threshold = 180
+
+    capture_timer = utility.FramerateCounter()
+    conv_thresh_timer = utility.FramerateCounter()
+    contour_timer = utility.FramerateCounter()
     with picam_wrapper.opencv_picamera() as camera:
         while True:
+            capture_timer.reset()
             image = camera.get_frame()
+            print("frame capture took", capture_timer.measure())
+
+            conv_thresh_timer.reset()
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             thresh, threshold_value = utility.threshold_image(
                 gray, binarization_threshold, use_otsu_thresholding)
+            print("conversion and thresholding took",
+                  conv_thresh_timer.measure())
 
+            contour_timer.reset()
             cnts_individual = cv2.findContours(thresh, cv2.RETR_EXTERNAL,
                                                cv2.CHAIN_APPROX_SIMPLE)
             # this is some weirdness where the return can be a tuple of 3 or 4 elements
             cnts_individual = cnts_individual[0] if len(
                 cnts_individual) == 2 else cnts_individual[1]
+
+            print("findContours took", contour_timer.measure())
+
             point_count = len(cnts_individual)
 
             point_centers = []
@@ -58,7 +72,7 @@ def main():
 
             data = {
                 "points": point_centers,
-                "framerate": counter.measure_fps(),
+                "frame_time": counter.measure(),
                 "point_count": point_count,
                 "useing_otsu_thresholding": use_otsu_thresholding,
                 "binarization_threshold": binarization_threshold,
