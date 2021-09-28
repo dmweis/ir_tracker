@@ -1,5 +1,7 @@
-from ir_tracker import debug_server
+import numpy as np
 import picamera
+
+from ir_tracker import debug_server
 
 RESOLUTION_WIDTH = 1280
 RESOLUTION_HEIGHT = 720
