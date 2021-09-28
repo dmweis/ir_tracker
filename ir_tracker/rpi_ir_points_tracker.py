@@ -5,10 +5,11 @@ from ir_tracker.utils import debug_server, multicast, picam_wrapper, utility
 
 
 def main():
-    debug_image_container = debug_server.create_image_server()
+    debug = False
+    if debug:
+        debug_image_container = debug_server.create_image_server()
     broadcaster = multicast.Broadcaster()
     counter = utility.FramerateCounter()
-    debug = False
     use_otsu_thresholding = False
     binarization_threshold = 180
     with picam_wrapper.opencv_picamera() as camera:
