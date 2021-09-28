@@ -4,7 +4,7 @@ from urllib.request import urlopen
 from ir_tracker import utility
 
 if __name__ == "__main__":
-    use_otsu_thresholding = False
+    use_otsu_thresholding = True
     binarization_threshold = 180
     while True:
         # image = cv2.imread(f"calibration_images/image000{image_id}.jpg")
