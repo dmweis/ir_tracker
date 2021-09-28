@@ -42,6 +42,13 @@ def video_feed(image_name):
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+@app.route('/image_frame/<image_name>')
+def video_frame(image_name):
+    _, payload = cv2.imencode('.jpg', image_container[image_name])
+    frame = payload.tobytes()
+    return Response(frame, mimetype='image/jpeg')
+
+
 @app.route("/stream_page/<image_name>")
 def stream_page(image_name):
     return render_template_string(STREAM_PAGE_TEMPLATE, image_name=image_name)
