@@ -1,22 +1,8 @@
-import numpy as np
-import picamera
-
-from ir_tracker import debug_server
-
-RESOLUTION_WIDTH = 1280
-RESOLUTION_HEIGHT = 720
-FRAMERATE = 30
-RESOLUTION = (RESOLUTION_WIDTH, RESOLUTION_HEIGHT)
+from ir_tracker import debug_server, picam_wrapper
 
 if __name__ == "__main__":
     debug_image_container = debug_server.create_image_server()
 
-    with picamera.PiCamera() as camera:
-        camera.resolution = RESOLUTION
-        camera.framerate = FRAMERATE
+    with picam_wrapper.opencv_picamera() as camera:
         while True:
-            image = np.empty((RESOLUTION_HEIGHT * RESOLUTION_WIDTH * 3, ),
-                             dtype=np.uint8)
-            camera.capture(image, 'bgr')
-            image = image.reshape((RESOLUTION_HEIGHT, RESOLUTION_WIDTH, 3))
-            debug_image_container["last_image"] = image
+            debug_image_container["last_image"] = camera.get_frame()
