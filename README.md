@@ -1,5 +1,5 @@
 # Ir tracker awful code
 
-## Push to local pi
+Scratch pad repo for ir beacon tracker.
 
-`git push ssh://pi@camerapi2.local/home/pi/src/ir_tracker/`
+This code is not interesting. This is only public so that I don't have to give keys to raspberry pis to push new code there.
