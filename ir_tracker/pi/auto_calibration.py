@@ -22,42 +22,42 @@ def main():
     with picam_wrapper.picamera_opencv_video(resolution=(640, 480),
                                              framerate=30) as video_stream:
         calibration_images = []
+        start_time = time.time()
         for frame in video_stream:
-            while len(calibration_images) < 10:
-                start_time = time.time()
-                while True:
-                    current_time = time.time()
-                    time_delta = current_time - start_time
-                    if time_delta > PICTURE_TIME:
-                        clean_image = frame.copy()
-                        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                        found_chessboard, corners = cv2.findChessboardCorners(
-                            gray, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), None)
-                        cv2.drawChessboardCorners(
-                            frame, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH),
-                            corners, found_chessboard)
-                        if found_chessboard:
-                            calibration_images.append(clean_image)
-                            draw_info(frame, "Image saved")
-                            debug_image_container["calib"] = frame
-                            # time.sleep(1)
-                        else:
-                            draw_info(frame, "Chessboard not found")
-                            debug_image_container["calib"] = frame
-                            # time.sleep(1)
-                        break
-                    draw_info(
-                        frame,
-                        f"{PICTURE_TIME - time_delta:.1f}s left, {len(calibration_images)}/{NUMBER_OF_IMAGES}"
-                    )
-                    # detect chessboard
-                    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    found_chessboard, corners = cv2.findChessboardCorners(
-                        gray, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), None)
-                    cv2.drawChessboardCorners(
-                        frame, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), corners,
-                        found_chessboard)
+            if len(calibration_images) >= 10:
+                break
+            current_time = time.time()
+            time_delta = current_time - start_time
+            if time_delta > PICTURE_TIME:
+                clean_image = frame.copy()
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                found_chessboard, corners = cv2.findChessboardCorners(
+                    gray, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), None)
+                cv2.drawChessboardCorners(
+                    frame, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), corners,
+                    found_chessboard)
+                if found_chessboard:
+                    calibration_images.append(clean_image)
+                    draw_info(frame, "Image saved")
                     debug_image_container["calib"] = frame
+                    # time.sleep(1)
+                else:
+                    draw_info(frame, "Chessboard not found")
+                    debug_image_container["calib"] = frame
+                    # time.sleep(1)
+                break
+            draw_info(
+                frame,
+                f"{PICTURE_TIME - time_delta:.1f}s left, {len(calibration_images)}/{NUMBER_OF_IMAGES}"
+            )
+            # detect chessboard
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            found_chessboard, corners = cv2.findChessboardCorners(
+                gray, (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH), None)
+            cv2.drawChessboardCorners(frame,
+                                      (CHESSBOARD_HEIGHT, CHESSBOARD_WIDTH),
+                                      corners, found_chessboard)
+            debug_image_container["calib"] = frame
 
         image_directory = Path.home().joinpath("calibration_images")
         image_directory.mkdir(parents=True, exist_ok=True)
