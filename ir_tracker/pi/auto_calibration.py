@@ -40,11 +40,11 @@ def main():
                             calibration_images.append(clean_image)
                             draw_info(frame, "Image saved")
                             debug_image_container["calib"] = frame
-                            time.sleep(1)
+                            # time.sleep(1)
                         else:
                             draw_info(frame, "Chessboard not found")
                             debug_image_container["calib"] = frame
-                            time.sleep(1)
+                            # time.sleep(1)
                         break
                     draw_info(
                         frame,
