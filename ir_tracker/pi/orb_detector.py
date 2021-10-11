@@ -12,7 +12,11 @@ def main():
         for frame in video_stream:
             debug_image_container["last_image"] = frame.copy()
             key_points, descriptors = orb.detectAndCompute(frame, None)
-            cv2.drawKeypoints(frame, key_points, flags=2, color=(0, 255, 255))
+            orb_image = cv2.drawKeypoints(frame,
+                                          key_points,
+                                          outImage=None,
+                                          flags=2,
+                                          color=(0, 255, 255))
             debug_image_container["orb_image"] = frame
             print("FPS: ", counter.measure_fps())
 
