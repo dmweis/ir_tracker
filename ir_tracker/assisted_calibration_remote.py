@@ -17,8 +17,8 @@ def draw_info(image, text):
                 (255, 255, 0), 2, cv2.LINE_AA)
 
 
-CHESSBOARD_HEIGHT = 10
-CHESSBOARD_WIDTH = 7
+CHESSBOARD_HEIGHT = 8
+CHESSBOARD_WIDTH = 5
 PICTURE_TIME = 3
 NUMBER_OF_IMAGES = 10
 # record images

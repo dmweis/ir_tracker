@@ -4,8 +4,8 @@ import numpy as np
 import yaml
 from ir_tracker.utils import calibration_manager
 
-CHESSBOARD_HEIGHT = 10
-CHESSBOARD_WIDTH = 7
+CHESSBOARD_HEIGHT = 8
+CHESSBOARD_WIDTH = 5
 
 image_paths = glob.glob('calibration_images/*.png')
 images = [cv2.imread(image_path) for image_path in image_paths]
