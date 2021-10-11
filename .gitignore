@@ -150,3 +150,7 @@ calibration
 
 # random
 trash
+
+# images from cameras
+*.png
+*.jpg
