@@ -16,7 +16,11 @@ while True:
     image = utility.request_image()
     orb = cv2.ORB_create()
     key_points, descriptors = orb.detectAndCompute(image, None)
-    orb_image = cv2.drawKeypoints(image, key_points, outImage=None, flags=2)
+    orb_image = cv2.drawKeypoints(image,
+                                  key_points,
+                                  outImage=None,
+                                  flags=2,
+                                  color=(0, 255, 255))
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     corners = cv2.goodFeaturesToTrack(gray, 25, 0.01, 10)
     for i in corners:
