@@ -2,7 +2,7 @@ import threading
 
 import cv2
 import numpy as np
-from flask import Flask, Response, render_template_string
+from flask import Flask, Response, render_template_string, abort
 
 app = Flask(__name__)
 
@@ -44,7 +44,10 @@ def video_feed(image_name):
 
 @app.route('/image_frame/<image_name>')
 def video_frame(image_name):
-    _, payload = cv2.imencode('.jpg', image_container[image_name])
+    image = image_container.get(image_name, None)
+    if image is None:
+        return abort(404)
+    _, payload = cv2.imencode('.jpg', image)
     frame = payload.tobytes()
     return Response(frame, mimetype='image/jpeg')
 
