@@ -17,7 +17,7 @@ def main():
                                           outImage=None,
                                           flags=2,
                                           color=(0, 255, 255))
-            debug_image_container["orb_image"] = frame
+            debug_image_container["orb_image"] = orb_image
             print("FPS: ", counter.measure_fps())
 
 
