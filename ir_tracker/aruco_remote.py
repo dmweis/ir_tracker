@@ -5,8 +5,7 @@ aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_4X4_100)
 aruco_params = cv2.aruco.DetectorParameters_create()
 
 while True:
-    frame = utility.request_image(
-        url="http://camerapi2.local:8000/image_frame/last_image")
+    frame = utility.request_image()
     (corners, ids, rejected) = cv2.aruco.detectMarkers(frame,
                                                        aruco_dict,
                                                        parameters=aruco_params)

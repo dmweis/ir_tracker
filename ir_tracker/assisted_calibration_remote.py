@@ -27,10 +27,10 @@ calibration_images = []
 while len(calibration_images) < 10:
     start_time = time.time()
     while True:
+        image = utility.request_image()
         current_time = time.time()
         time_delta = current_time - start_time
         if time_delta > PICTURE_TIME:
-            image = utility.request_image()
             clean_image = image.copy()
             gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             found_chessboard, corners = cv2.findChessboardCorners(
@@ -48,7 +48,6 @@ while len(calibration_images) < 10:
                 cv2.imshow('img', image)
                 cv2.waitKey(1000)
             break
-        image = read_image()
         draw_info(
             image,
             f"{PICTURE_TIME - time_delta:.1f}s left, {len(calibration_images)}/{NUMBER_OF_IMAGES}"
