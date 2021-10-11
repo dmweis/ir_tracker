@@ -10,6 +10,8 @@ image_container = {}
 
 
 def camera_stream(image_name):
+    if image_name not in image_container:
+        return abort(404)
     while True:
         _, payload = cv2.imencode('.jpg', image_container[image_name])
         frame = payload.tobytes()
