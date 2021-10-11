@@ -18,7 +18,7 @@ def main():
                                                  parameters=aruco_params)
             cv2.aruco.drawDetectedMarkers(frame, corners, ids)
             debug_image_container["aruco_image"] = frame
-            print("loop took", counter.measure())
+            print("FPS: ", counter.measure_fps())
 
 
 if __name__ == "__main__":
