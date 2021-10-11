@@ -12,7 +12,7 @@ Generally I'd suggest using some virtual env system. But on a raspberry pi insta
 ### Install Dependencies on raspbian
 
 ```shell
-apt install cmake libjpeg8-dev gcc g++ python3-dev python3-opencv
+apt install cmake libjpeg8-dev gcc g++ python3-dev python3-opencv python3-yaml
 ```
 
 ## Raspberry pi
